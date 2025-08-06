@@ -1,10 +1,15 @@
-package nl.mdsystems.ktor.modules.tasks
+package nl.icsvertex.gradle.server.modules.tasks
 
-import nl.mdsystems.ktor.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.jvm.tasks.Jar
+import java.io.File
 
 /**
  * A Gradle task that compiles Ktor modules.
@@ -16,6 +21,13 @@ import org.gradle.jvm.tasks.Jar
  * @see KtorModuleConfig
  */
 abstract class CompileModules : DefaultTask() {
+
+    @get:Input
+    abstract val mainClass: Property<String>
+
+    @get:OutputDirectory
+    abstract val buildLocation: Property<File>
+
     /**
      * The main action of the task.
      *
@@ -29,12 +41,10 @@ abstract class CompileModules : DefaultTask() {
      */
     @TaskAction
     fun compile() {
-        val config = project.extensions.getByType(KtorModuleConfig::class.java)
-
         // Check configuration
-        if(!config.buildLocation.exists()) config.buildLocation.mkdirs()
-        if(!config.buildLocation.isDirectory) throw IllegalStateException("ktorModules.buildLocation need to be a directory!")
-        if(config.mainClass.isBlank()) throw IllegalStateException("Mainclass property cannot be empty!")
+        if(!buildLocation.get().exists()) buildLocation.get().mkdirs()
+        if(!buildLocation.get().isDirectory) throw IllegalStateException("ktorModules.buildLocation need to be a directory!")
+        if(mainClass.get().isBlank()) throw IllegalStateException("Mainclass property cannot be empty!")
     }
     
     companion object {
@@ -50,6 +60,9 @@ abstract class CompileModules : DefaultTask() {
             project.tasks.register("compile", CompileModules::class.java){
                 val config = project.extensions.getByType(KtorModuleConfig::class.java)
                 it.group = "ktor Modules"
+
+                it.mainClass.set(config.mainClass)
+                it.buildLocation.set(config.buildLocation)
 
                 it.dependsOn(
                     project.tasks.withType(CopyDependencies::class.java)

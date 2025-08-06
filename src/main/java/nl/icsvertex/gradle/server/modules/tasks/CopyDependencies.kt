@@ -1,8 +1,14 @@
-package nl.mdsystems.ktor.modules.tasks
+package nl.icsvertex.gradle.server.modules.tasks
 
-import nl.mdsystems.ktor.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Configuration
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
@@ -16,6 +22,13 @@ import java.io.File
  * @see CopyDependencies.registerCopyDependenciesTask
  */
 abstract class CopyDependencies : DefaultTask() {
+
+    @get:OutputDirectory
+    abstract val buildLocation: Property<File>
+
+    @get:Input
+    abstract val includeDependencies: Property<Boolean>
+
     /**
      * The main action of the task.
      *
@@ -27,12 +40,10 @@ abstract class CopyDependencies : DefaultTask() {
      */
     @TaskAction
     fun copyDependencies() {
-        val config = project.extensions.getByType(KtorModuleConfig::class.java)
-
-        if(config.includeDependencies) {
+        if(includeDependencies.get()) {
             project.copy {
                 it.from(project.configurations.getByName("runtimeClasspath"))
-                it.into(File(config.buildLocation, "dependencies"))
+                it.into(buildLocation.get())
             }
         }
     }
@@ -49,7 +60,11 @@ abstract class CopyDependencies : DefaultTask() {
     companion object {
         fun registerCopyDependenciesTask(project: Project) {
             project.tasks.register("copyDependencies", CopyDependencies::class.java){
+                val config = project.extensions.getByType(KtorModuleConfig::class.java)
+
                 it.group = "ktor Modules"
+                it.buildLocation.set(File(config.buildLocation, "dependencies"))
+                it.includeDependencies.set(config.includeDependencies)
             }
         }
     }

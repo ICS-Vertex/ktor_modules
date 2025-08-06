@@ -1,4 +1,4 @@
-package nl.mdsystems.ktor.modules.config
+package nl.icsvertex.gradle.server.modules.config
 
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory

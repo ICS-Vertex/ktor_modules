@@ -1,8 +1,11 @@
-package nl.mdsystems.ktor.modules
+package nl.icsvertex.gradle.server.modules
 
-import nl.mdsystems.ktor.modules.config.KtorModuleConfig
-import nl.mdsystems.ktor.modules.extensions.*
-import nl.mdsystems.ktor.modules.tasks.*
+import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.extensions.addDependencies
+import nl.icsvertex.gradle.server.modules.extensions.addPlugins
+import nl.icsvertex.gradle.server.modules.extensions.addRepositories
+import nl.icsvertex.gradle.server.modules.tasks.CompileModules
+import nl.icsvertex.gradle.server.modules.tasks.CopyDependencies
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.jvm.tasks.Jar
@@ -31,11 +34,12 @@ abstract class KtorModules : Plugin<Project> {
         addDependencies(project)
 
         // Configure compile tasks
-        CopyDependencies.registerCopyDependenciesTask(project)
-        CompileModules.registerCompileModulesTask(project)
+        CopyDependencies.Companion.registerCopyDependenciesTask(project)
+        CompileModules.Companion.registerCompileModulesTask(project)
 
         // Setup jar task
         project.tasks.withType(Jar::class.java) { task ->
+            task.outputs.upToDateWhen { false }
             task.doFirst {
                 // Set the destination directory for the jar file
                 task.destinationDirectory.set(config.buildLocation)

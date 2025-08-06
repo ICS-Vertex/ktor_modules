@@ -1,6 +1,6 @@
-package nl.mdsystems.ktor.modules.extensions
+package nl.icsvertex.gradle.server.modules.extensions
 
-import nl.mdsystems.ktor.modules.KtorModules
+import nl.icsvertex.gradle.server.modules.KtorModules
 import org.gradle.api.Project
 
 

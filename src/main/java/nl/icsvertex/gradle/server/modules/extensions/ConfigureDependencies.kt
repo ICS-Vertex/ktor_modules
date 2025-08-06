@@ -1,6 +1,6 @@
-package nl.mdsystems.ktor.modules.extensions
+package nl.icsvertex.gradle.server.modules.extensions
 
-import nl.mdsystems.ktor.modules.KtorModules
+import nl.icsvertex.gradle.server.modules.KtorModules
 import org.gradle.api.Project
 
 /**
@@ -16,7 +16,7 @@ import org.gradle.api.Project
  */
 fun KtorModules.addDependencies(project: Project) {
     val baseDependencies = listOf(
-        "nl.icsvertex.ktor:ics_core_server:0.0.2.62"
+        "nl.icsvertex.server:modules:1.0.0.1"
     )
 
     baseDependencies.forEach { dependency ->

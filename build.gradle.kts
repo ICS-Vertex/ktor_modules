@@ -4,8 +4,8 @@ plugins {
     kotlin("jvm") version "2.0.20"
 }
 
-group = "nl.mdsystems.ktor"
-version = "0.0.1"
+group = "nl.icsvertex.ktor"
+version = "0.1.1"
 
 gradlePlugin {
     website = "https://github.com/MikeDirven/ktor_modules"
@@ -13,11 +13,11 @@ gradlePlugin {
 
     plugins {
         create("ktor-modules") {
-            id = "nl.mdsystems.ktor.modules"
+            id = "nl.icsvertex.ktor.modules"
             displayName = "Gradle plugin for ktor modules system"
             description = "Gradle plugin to help out building the ktor modules, that have been build with the ktor modules implementation"
             tags = listOf("ktor", "modules", "jetbrains", "plugins")
-            implementationClass = "nl.mdsystems.ktor.modules.KtorModules"
+            implementationClass = "nl.icsvertex.gradle.server.modules.KtorModules"
         }
     }
 }

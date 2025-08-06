@@ -1,6 +1,6 @@
-package nl.mdsystems.ktor.modules.extensions
+package nl.icsvertex.gradle.server.modules.extensions
 
-import nl.mdsystems.ktor.modules.KtorModules
+import nl.icsvertex.gradle.server.modules.KtorModules
 import org.gradle.api.Project
 import java.net.URI
 
@@ -27,7 +27,7 @@ fun KtorModules.addRepositories(project: Project) {
     project.repositories.gradlePluginPortal()
 
     project.repositories.maven { maven ->
-        maven.url = URI("https://maven.pkg.github.com/ICS-Vertex/ICS_Ktor_Modules")
+        maven.url = URI("https://maven.pkg.github.com/ICS-Vertex/*")
         maven.credentials { cred ->
             cred.username = System.getenv("GITHUB_USER")
             cred.password = System.getenv("GITHUB_KEY") ?: System.getenv("GITHUB_PASS")
