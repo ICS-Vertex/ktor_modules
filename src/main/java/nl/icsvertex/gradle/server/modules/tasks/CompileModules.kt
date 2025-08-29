@@ -5,7 +5,6 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import org.gradle.jvm.tasks.Jar
@@ -56,21 +55,18 @@ abstract class CompileModules : DefaultTask() {
          *
          * @param project The Gradle project to register the task for.
          */
-        fun registerCompileModulesTask(project: Project) {
+        fun registerCompileModulesTask(project: Project, config: KtorModuleConfig) {
+            val copyTask = project.tasks.withType(CopyDependencies::class.java)
+            val jarTask = project.tasks.withType(Jar::class.java)
             project.tasks.register("compile", CompileModules::class.java){
-                val config = project.extensions.getByType(KtorModuleConfig::class.java)
                 it.group = "ktor Modules"
 
                 it.mainClass.set(config.mainClass)
                 it.buildLocation.set(config.buildLocation)
 
-                it.dependsOn(
-                    project.tasks.withType(CopyDependencies::class.java)
-                )
+                it.dependsOn(copyTask)
 
-                it.dependsOn(
-                    project.tasks.withType(Jar::class.java)
-                )
+                it.dependsOn(jarTask)
             }
         }
     }

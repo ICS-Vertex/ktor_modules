@@ -58,10 +58,8 @@ abstract class CopyDependencies : DefaultTask() {
      * @see CopyDependencies
      */
     companion object {
-        fun registerCopyDependenciesTask(project: Project) {
+        fun registerCopyDependenciesTask(project: Project, config: KtorModuleConfig) {
             project.tasks.register("copyDependencies", CopyDependencies::class.java){
-                val config = project.extensions.getByType(KtorModuleConfig::class.java)
-
                 it.group = "ktor Modules"
                 it.buildLocation.set(File(config.buildLocation, "dependencies"))
                 it.includeDependencies.set(config.includeDependencies)
