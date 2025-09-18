@@ -20,10 +20,7 @@ open class KtorModuleConfig : Catalogs {
     var mainClass: String = ""
 
     @Input
-    var serverCatalog: String = "nl.icsvertex.scansuite.modules:catalog"
-
-    @Input
-    var serverCatalogVersion: String = "1.0.0.156"
+    var includeSources: Boolean = true
 
     @InputDirectory
     var buildLocation: File = File("build/module")
@@ -35,7 +32,7 @@ open class KtorModuleConfig : Catalogs {
     override var catalogList: List<Catalog> = listOf(
         Catalog(
             name = "server",
-            version = "1.0.0.156",
+            version = "1.0.0.160",
             catalog = "nl.icsvertex.scansuite.modules:catalog"
         )
     )

@@ -16,7 +16,7 @@ import org.gradle.api.Project
  */
 fun KtorModules.addDependencies(project: Project) {
     val baseDependencies = listOf(
-        "nl.icsvertex.server:modules:1.0.0.1"
+        "nl.icsvertex.server:modules:1.0.0.3"
     )
 
     baseDependencies.forEach { dependency ->

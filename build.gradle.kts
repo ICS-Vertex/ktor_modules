@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.icsvertex.ktor"
-version = "0.1.3"
+version = "0.1.8"
 
 gradlePlugin {
     website = "https://github.com/MikeDirven/ktor_modules"
