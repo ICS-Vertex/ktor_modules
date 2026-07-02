@@ -1,13 +1,10 @@
 package nl.icsvertex.gradle.server.modules.tasks
 
-import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.config.IcsModuleConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.artifacts.Configuration
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputDirectory
-import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 import java.io.File
@@ -32,16 +29,17 @@ abstract class CopyDependencies : DefaultTask() {
     /**
      * The main action of the task.
      *
-     * This function retrieves the [KtorModuleConfig] extension from the project and checks if the
+     * This function retrieves the [IcsModuleConfig] extension from the project and checks if the
      * `includeDependencies` flag is set to true. If it is, it copies all dependencies from the
      * "runtimeClasspath" configuration to a specified location within the project's build directory.
      *
-     * @see KtorModuleConfig
+     * @see IcsModuleConfig
      */
     @TaskAction
     fun copyDependencies() {
         if(includeDependencies.get()) {
             project.copy {
+                it.exclude { it.path.contains("-sources") }
                 it.from(project.configurations.getByName("runtimeClasspath"))
                 it.into(buildLocation.get())
             }
@@ -58,11 +56,15 @@ abstract class CopyDependencies : DefaultTask() {
      * @see CopyDependencies
      */
     companion object {
-        fun registerCopyDependenciesTask(project: Project, config: KtorModuleConfig) {
+        fun registerCopyDependenciesTask(project: Project, config: IcsModuleConfig) {
+            val compileTask = project.tasks.withType(CompileModules::class.java)
             project.tasks.register("copyDependencies", CopyDependencies::class.java){
+                it.outputs.upToDateWhen { false }
                 it.group = "ktor Modules"
-                it.buildLocation.set(File(config.buildLocation, "dependencies"))
+                it.buildLocation.set(File(config.buildLocation, "modules/dependencies"))
                 it.includeDependencies.set(config.includeDependencies)
+
+                it.mustRunAfter(compileTask)
             }
         }
     }

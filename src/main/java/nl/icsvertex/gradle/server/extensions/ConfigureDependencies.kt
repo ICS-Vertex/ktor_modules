@@ -1,6 +1,5 @@
-package nl.icsvertex.gradle.server.modules.extensions
+package nl.icsvertex.gradle.server.extensions
 
-import nl.icsvertex.gradle.server.modules.KtorModules
 import org.gradle.api.Project
 
 /**
@@ -14,9 +13,9 @@ import org.gradle.api.Project
  *
  * @return Nothing. The function modifies the given [project] directly.
  */
-fun KtorModules.addDependencies(project: Project) {
+fun addDependencies(project: Project) {
     val baseDependencies = listOf(
-        "nl.icsvertex.server:modules:1.0.0.3"
+        "nl.icsvertex.server:modules:1.0.0.21"
     )
 
     baseDependencies.forEach { dependency ->

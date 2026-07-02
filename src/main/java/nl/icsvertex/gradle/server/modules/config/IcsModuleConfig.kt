@@ -15,7 +15,7 @@ import java.io.File
  * @property includeDependencies A flag indicating whether the module dependencies should be included
  * in the final package.
  */
-open class KtorModuleConfig : Catalogs {
+open class IcsModuleConfig : Catalogs {
     @Input
     var mainClass: String = ""
 
@@ -23,19 +23,13 @@ open class KtorModuleConfig : Catalogs {
     var includeSources: Boolean = true
 
     @InputDirectory
-    var buildLocation: File = File("build/module")
+    var buildLocation: File = File("compiled")
 
     @Input
     var includeDependencies: Boolean = true
 
     @Input
-    override var catalogList: List<Catalog> = listOf(
-        Catalog(
-            name = "server",
-            version = "1.0.0.160",
-            catalog = "nl.icsvertex.scansuite.modules:catalog"
-        )
-    )
+    override var catalogList: List<Catalog> = listOf()
 
     fun catalogs(block: Catalogs.() -> Unit) {
         block(this)

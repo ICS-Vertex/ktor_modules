@@ -1,6 +1,5 @@
-package nl.icsvertex.gradle.server.modules.extensions
+package nl.icsvertex.gradle.server.extensions
 
-import nl.icsvertex.gradle.server.modules.KtorModules
 import org.gradle.api.Project
 import java.net.URI
 
@@ -20,7 +19,7 @@ import java.net.URI
  *
  * @param project The [Project] to which the repositories will be added.
  */
-fun KtorModules.addRepositories(project: Project) {
+fun addRepositories(project: Project) {
     project.repositories.mavenLocal()
     project.repositories.mavenCentral()
     project.repositories.google()

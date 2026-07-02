@@ -1,12 +1,11 @@
-package nl.icsvertex.gradle.server.modules.extensions
+package nl.icsvertex.gradle.server.extensions
 
-import nl.icsvertex.gradle.server.modules.KtorModules
-import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.config.IcsModuleConfig
 import org.gradle.api.Project
 import org.gradle.api.initialization.resolve.DependencyResolutionManagement
 import java.net.URI
 
-fun KtorModules.configureVersionCatalog(project: Project, config: KtorModuleConfig) {
+fun configureVersionCatalog(project: Project, config: IcsModuleConfig) {
     project.rootProject.extensions.configure(DependencyResolutionManagement::class.java) {
         it.repositories { repos ->
             repos.maven { maven ->

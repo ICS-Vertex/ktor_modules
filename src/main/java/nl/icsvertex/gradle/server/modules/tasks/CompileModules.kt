@@ -1,6 +1,6 @@
 package nl.icsvertex.gradle.server.modules.tasks
 
-import nl.icsvertex.gradle.server.modules.config.KtorModuleConfig
+import nl.icsvertex.gradle.server.modules.config.IcsModuleConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.provider.Property
@@ -14,10 +14,10 @@ import java.io.File
  * A Gradle task that compiles Ktor modules.
  *
  * This task extends the DefaultTask class and is responsible for compiling the Ktor modules.
- * It checks the configuration provided by the [KtorModuleConfig] extension and performs necessary
+ * It checks the configuration provided by the [IcsModuleConfig] extension and performs necessary
  * actions such as creating the build location directory and validating the main class property.
  *
- * @see KtorModuleConfig
+ * @see IcsModuleConfig
  */
 abstract class CompileModules : DefaultTask() {
 
@@ -30,7 +30,7 @@ abstract class CompileModules : DefaultTask() {
     /**
      * The main action of the task.
      *
-     * This method retrieves the [KtorModuleConfig] extension from the project and performs the
+     * This method retrieves the [IcsModuleConfig] extension from the project and performs the
      * following checks:
      * 1. Checks if the build location directory exists, and if not, creates it.
      * 2. Validates that the build location is a directory.
@@ -43,7 +43,6 @@ abstract class CompileModules : DefaultTask() {
         // Check configuration
         if(!buildLocation.get().exists()) buildLocation.get().mkdirs()
         if(!buildLocation.get().isDirectory) throw IllegalStateException("ktorModules.buildLocation need to be a directory!")
-        if(mainClass.get().isBlank()) throw IllegalStateException("Mainclass property cannot be empty!")
     }
     
     companion object {
@@ -55,18 +54,22 @@ abstract class CompileModules : DefaultTask() {
          *
          * @param project The Gradle project to register the task for.
          */
-        fun registerCompileModulesTask(project: Project, config: KtorModuleConfig) {
+        fun registerCompileModulesTask(project: Project, config: IcsModuleConfig) {
             val copyTask = project.tasks.withType(CopyDependencies::class.java)
             val jarTask = project.tasks.withType(Jar::class.java)
-            project.tasks.register("compile", CompileModules::class.java){
-                it.group = "ktor Modules"
+            val cleanUpTask = project.tasks.withType(ModulesCleanUp::class.java)
 
-                it.mainClass.set(config.mainClass)
-                it.buildLocation.set(config.buildLocation)
+            project.tasks.register("compile", CompileModules::class.java){ compileTask ->
+                compileTask.group = "ktor Modules"
 
-                it.dependsOn(copyTask)
+                compileTask.mainClass.set(config.mainClass)
+                compileTask.buildLocation.set(File(config.buildLocation, "modules"))
 
-                it.dependsOn(jarTask)
+                compileTask.finalizedBy(copyTask, jarTask, cleanUpTask)
+            }
+
+            project.tasks.matching { it.name == "build" || it.name == "assemble" }.configureEach {
+                it.dependsOn("compile")
             }
         }
     }
