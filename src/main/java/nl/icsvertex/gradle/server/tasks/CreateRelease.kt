@@ -43,7 +43,7 @@ fun registerCreateReleaseTask(project: Project, config: IcsServerConfig) {
             zipTask.archiveFileName.set("${project.rootProject.name}-${project.version}.zip")
             zipTask.destinationDirectory.set(config.buildLocation)
 
-            zipTask.doLast {
+            zipTask.doFirst {
                 val releaseInfoFile = File(config.buildLocation, "release.txt")
 
                 val gitCommit = try {
@@ -106,6 +106,11 @@ fun registerCreateReleaseTask(project: Project, config: IcsServerConfig) {
             zipTask.from(modulesDir) {
                 // We exclude 'server' here because we already added server.jar above
                 it.into("modules")
+            }
+
+            // 3. Include the generated release info text file in the root of the zip
+            zipTask.from(config.buildLocation) {
+                it.include("release.txt")
             }
         }
     }

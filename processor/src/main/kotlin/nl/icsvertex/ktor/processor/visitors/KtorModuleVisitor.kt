@@ -6,6 +6,7 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSVisitorVoid
+import com.google.devtools.ksp.symbol.ClassKind
 import nl.icsvertex.server.controllers.annotations.KtorController
 import java.io.OutputStream
 
@@ -36,21 +37,24 @@ class KtorModuleVisitor(
 
         val controllerInits = ktorControllerClasses.map { (path, controller) ->
             val fqdn = controller.qualifiedName?.asString() ?: controller.simpleName.asString()
+            val invocation = if (controller.classKind == ClassKind.OBJECT) fqdn else "$fqdn()"
             if(path.isBlank()) {
-                "this init $fqdn()"
+                "this init $invocation"
             } else {
-                "this path \"$path\" init $fqdn()"
+                "this path \"$path\" init $invocation"
             }
         }
 
         val serviceInits = ktorServiceClasses.map { service ->
             val fqdn = service.qualifiedName?.asString() ?: service.simpleName.asString()
-            "this add $fqdn()"
+            val invocation = if (service.classKind == ClassKind.OBJECT) fqdn else "$fqdn()"
+            "this add $invocation"
         }
 
         val scheduleInits = ktorScheduleClasses.map { schedule ->
             val fqdn = schedule.qualifiedName?.asString() ?: schedule.simpleName.asString()
-            "this schedule $fqdn()"
+            val invocation = if (schedule.classKind == ClassKind.OBJECT) fqdn else "$fqdn()"
+            "this schedule $invocation"
         }
 
         file.write("package $packageName\n\n".toByteArray())

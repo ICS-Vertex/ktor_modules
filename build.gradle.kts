@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "nl.icsvertex.ktor"
-version = "0.3.2"
+version = "0.3.3"
 
 val user: String = System.getenv("GITHUB_USER")
 val key: String = System.getenv("GITHUB_KEY") ?: System.getenv("GITHUB_PASS")
